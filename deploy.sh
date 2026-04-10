@@ -1,18 +1,20 @@
 #!/bin/bash
 
-# 1. Solicitar un mensaje para el commit
-echo "Introduce el mensaje del commit:"
-read commit_message
+BUCKET_NAME="mi-bucket-ejemplo"
+BACKUP_FILE="backup_$(date +%F).tar.gz"
+LOG_FILE="backup.log"
 
-# 2. Agregar todos los cambios
-git add .
+echo "Iniciando respaldo..." | tee -a $LOG_FILE
 
-# 3. Hacer el commit con el mensaje proporcionado
-git commit -m "$commit_message"
+# Carpeta actual (donde está tu código en CodeBuild)
+SOURCE_DIR="."
 
-# 4. Subir los cambios a la rama principal (main o master)
-echo "Subiendo cambios a GitHub..."
-git push origin main
+# Crear backup
+tar -czf $BACKUP_FILE $SOURCE_DIR >> $LOG_FILE 2>&1
 
-echo "¡Despliegue iniciado! Revisa tu consola de AWS para ver el progreso."
-
+# Subir a S3
+if aws s3 cp $BACKUP_FILE s3://$BUCKET_NAME/ >> $LOG_FILE 2>&1; then
+    echo "Respaldo subido exitosamente." | tee -a $LOG_FILE
+else
+    echo "Error en la subida del respaldo." | tee -a $LOG_FILE
+fi
