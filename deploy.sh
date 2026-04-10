@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BUCKET_NAME="mi-bucket-ejemplo"
+BUCKET_NAME="codepipeline-us-east-1-d3312383da51-4d8b-b5c0-7d956b61543d"
 BACKUP_FILE="backup_$(date +%F).tar.gz"
 LOG_FILE="backup.log"
 

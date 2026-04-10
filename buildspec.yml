@@ -7,3 +7,13 @@ phases:
     build:
       commands:
         - docker build -t flask-app ./app
+
+  post_build:
+    commands:
+      - echo "Running deploy script"
+      - chmod +x deploy.sh
+      - ./deploy.sh
+
+artifacts:
+  files:
+    - '**/*'
